@@ -172,6 +172,6 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
-
+.venv/
 # End of https://www.toptal.com/developers/gitignore/api/python
 In/aL68LD2.49MI29.1KwhoisMore dataSummary reportDiagnosisDensity00n/a
