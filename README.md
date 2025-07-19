@@ -18,12 +18,15 @@ This project sets up a Squid transparent proxy server inside Docker containers, 
 - Linux Shell (e.g. Bash)
 - External Docker network (e.g. `ipvl2net`) created with static IP pool
 ---
+
 ```bash
-  docker network create \
-  --driver=bridge \
-  --subnet=103.66.177.240/28 \
-  ipvl2net
+  docker network create -d ipvlan \
+   --subnet=103.66.177.240/28 \
+   --gateway=103.66.177.241 \
+   -o parent=enp0s31f6 \
+   ipvl2net
 ```
+
 
 
 ## 🛠️ Build & Run
