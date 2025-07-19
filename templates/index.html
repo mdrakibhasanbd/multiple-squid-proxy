@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Squid Proxy User Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-4xl h-[800px]">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+      🦑 Squid Proxy User Manager
+    </h1>
+
+    <!-- Add or Update User -->
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Add or Update User</h2>
+    <form id="addUserForm" class="flex flex-col gap-4 md:flex-row md:items-end">
+      <input
+        type="text"
+        id="username"
+        placeholder="Username"
+        required
+        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      />
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        required
+        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      />
+      <button
+        type="submit"
+        class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+      >
+        Add / Update
+      </button>
+    </form>
+
+    <!-- Client Table -->
+    <h2 class="text-xl font-semibold text-gray-700 mt-8 mb-4">Client List</h2>
+    <div class="overflow-x-auto text-center">
+      <table class="min-w-full bg-white shadow rounded-lg">
+        <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+          <tr>
+            <th class="px-4 py-2">ID</th>
+            <th class="px-4 py-2">Username</th>
+            <th class="px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm text-gray-800">
+          <!-- Rows will be populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function loadUsers() {
+      try {
+        const res = await fetch('/users');
+        const users = await res.json();
+
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = '';
+
+        users.forEach((user, index) => {
+          const username = typeof user === 'string' ? user : user.username;
+
+          const tr = document.createElement('tr');
+          tr.className = "border-t hover:bg-gray-50";
+          tr.innerHTML = `
+            <td class="px-4 py-2">${index + 1}</td>
+            <td class="px-4 py-2">${username}</td>
+            <td class="px-4 py-2">
+              <button class="text-sm text-red-600 hover:underline" onclick="deleteUser('${username}')">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Failed to load users:', err);
+      }
+    }
+
+    async function deleteUser(username) {
+      await fetch(`/users/${username}`, { method: 'DELETE' });
+      loadUsers();
+    }
+
+    document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const result = await res.json();
+        alert(result.message || result.error);
+        loadUsers();
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+      } catch (err) {
+        alert('Failed to add/update user.');
+        console.error(err);
+      }
+    });
+
+    loadUsers();
+  </script>
+</body>
+</html>

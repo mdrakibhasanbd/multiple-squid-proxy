@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  squid-proxy:
+    build: .
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    environment:
+      - SQUID_USER=qwerty
+      - SQUID_PASS=secret123
+      - SQUID_PORT=8090
+    hostname: squid-proxy
+    container_name: squid-proxy
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "50"
+        tag: squid-proxy
+    volumes:
+      - ./var/cache:/var/spool/squid
+      - ./var/log:/var/log/squid
+      - ./.htpasswd:/etc/squid/.htpasswd:rw
+
+    networks:
+      ipvl2net:
+        ipv4_address: 103.66.177.242
+
+networks:
+  ipvl2net:
+    external: true
