@@ -33,6 +33,7 @@ This project sets up a Squid transparent proxy server inside Docker containers, 
 
 ```bash
   chmod +x docker-squid-up.sh
+  mv docker-squid-up.sh directory path
   ./docker-squid-up.sh
 
 ```
@@ -40,6 +41,7 @@ This project sets up a Squid transparent proxy server inside Docker containers, 
 
 ```bash
   chmod +x docker-squid-down.sh
+  mv docker-squid-down.sh directory path
   ./docker-squid-down.sh
 ```
 
