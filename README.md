@@ -71,16 +71,28 @@ project supports batch provisioning of proxies with unique IPs and ports.
 
 ```bash
 
-├── templates/           
-│   ├── index.html            
-├── .htpasswd                  # Auth credentials (auto-generated)
-├── docker-compose.yml         # Docker Compose config
-├── ipv6-docker-squid-up.sh         # Startup script
-├── ipv6-docker-squid-down.sh       # Teardown script
-├── Dockerfile                 # Docker image definition
-├── entrypoint.sh              # Entrypoint script for container setup
-├── README.md                  # This file
-├── squid_api.py               # Flask API
+├── ipv4
+│   ├── container
+│   │   ├── entrypoint.sh
+│   │   ├── squid_api.py
+│   │   └── templates
+│   │       └── index.html
+│   ├── docker-compose.yml
+│   └── Dockerfile
+├── ipv4-docker-squid-down.sh
+├── ipv4-docker-squid-up.sh
+├── ipv6
+│   ├── container
+│   │   ├── entrypoint.sh
+│   │   ├── squid_api.py
+│   │   └── templates
+│   │       └── index.html
+│   ├── docker-compose.yml
+│   └── Dockerfile
+├── ipv6-docker-squid-down.sh
+├── ipv6-docker-squid-up.sh
+├── LICENSE
+└── README.md
 
 ```
 
