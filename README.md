@@ -70,13 +70,14 @@ project supports batch provisioning of proxies with unique IPs and ports.
 ## 🗂️ Project Structure
 
 ```bash
-
+├── docker-setup.sh
 ├── ipv4
 │   ├── container
 │   │   ├── entrypoint.sh
 │   │   ├── squid_api.py
 │   │   └── templates
 │   │       └── index.html
+│   ├── .htpasswd
 │   ├── docker-compose.yml
 │   └── Dockerfile
 ├── ipv4-docker-squid-down.sh
@@ -87,6 +88,7 @@ project supports batch provisioning of proxies with unique IPs and ports.
 │   │   ├── squid_api.py
 │   │   └── templates
 │   │       └── index.html
+│   ├── .htpasswd
 │   ├── docker-compose.yml
 │   └── Dockerfile
 ├── ipv6-docker-squid-down.sh
