@@ -2,17 +2,16 @@
 
 # Define IP range and base path
 START=243
-END=252
-BASE_IMAGE_DIR="docker-squid-proxy"
+END=244
+BASE_IMAGE_DIR="ipv6"
 
 # Function to handle cleanup of a single IP
 cleanup_ip() {
   local IP=$1
-  local DIR="${BASE_IMAGE_DIR}-${IP}"
-  local CONTAINER_NAME="squid-proxy-${IP}"
+  local DIR="squid-proxy-${BASE_IMAGE_DIR}-${IP}"
 
   if [ -d "$DIR" ]; then
-    echo "🔻 Stopping and removing container for IP: 103.66.177.${IP}"
+    echo "🔻 Stopping and removing container $DIR"
 
     # Change directory with error handling
     if ! cd "$DIR"; then
@@ -22,7 +21,7 @@ cleanup_ip() {
 
     # Stop and remove the container, volumes, and network association
     if ! docker-compose down -v --remove-orphans; then
-      echo "⚠️ Failed to stop container $CONTAINER_NAME"
+      echo "⚠️ Failed to stop container $DIR"
       cd ..
       return 1
     fi
@@ -47,4 +46,4 @@ for IP in $(seq $START $END); do
   cleanup_ip "$IP"
 done
 
-echo "✅ Cleanup completed for IP range 103.66.177.$START to 103.66.177.$END"
+echo "✅ Cleanup completed for IP range $START to $END"

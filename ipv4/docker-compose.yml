@@ -1,17 +1,17 @@
 version: '3'
 
 services:
-  squid-proxy:
+  squid-proxy-ipv4:
     build: .
     dns:
       - 8.8.8.8
       - 8.8.4.4
     environment:
-      - SQUID_USER=qwerty
+      - SQUID_USER=proxy
       - SQUID_PASS=secret123
       - SQUID_PORT=8090
-    hostname: squid-proxy
-    container_name: squid-proxy
+    hostname: squid-proxy-ipv4
+    container_name: squid-proxy-ipv4
     restart: always
     logging:
       driver: json-file
@@ -25,9 +25,9 @@ services:
       - ./.htpasswd:/etc/squid/.htpasswd:rw
 
     networks:
-      ipvl2net:
+      ipvl2net-ipv4:
         ipv4_address: 103.66.177.242
 
 networks:
-  ipvl2net:
+  ipvl2net-ipv4:
     external: true

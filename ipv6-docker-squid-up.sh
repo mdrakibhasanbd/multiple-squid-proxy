@@ -1,10 +1,10 @@
-#!/bin/bash
+  #!/bin/bash
 
 # Define IP range and base path
 START=243
-END=252
-BASE_IMAGE_DIR="docker-squid-proxy"
-NETWORK_NAME="ipvl2net"
+END=244
+BASE_IMAGE_DIR="ipv6"
+NETWORK_NAME="ipvl2net-ipv6"
 
 # Make sure the base directory exists
 if [ ! -d "$BASE_IMAGE_DIR" ]; then
@@ -13,11 +13,10 @@ if [ ! -d "$BASE_IMAGE_DIR" ]; then
 fi
 
 for IP in $(seq $START $END); do
-  DIR="${BASE_IMAGE_DIR}-${IP}"
-  CONTAINER_NAME="squid-proxy-${IP}"
-  IPV4_ADDR="103.66.177.${IP}"
+  DIR="squid-proxy-${BASE_IMAGE_DIR}-${IP}"
+  IPV6_ADDR="2406:59c0:5::${IP}"  # IPv6 address based on the subnet
 
-  echo "Creating container for IP: ${IPV4_ADDR}..."
+  echo "Creating container for IPv6: ${IPV6_ADDR}..."
 
   # Copy and enter directory
   cp -r "$BASE_IMAGE_DIR" "$DIR"
@@ -26,22 +25,22 @@ for IP in $(seq $START $END); do
   # Remove old docker-compose.yml if exists
   rm -f docker-compose.yml
 
-  # Create new docker-compose.yml
+  # Create new docker-compose.yml with both IPv4 and IPv6
   cat <<EOF > docker-compose.yml
 version: '3'
 
 services:
-  ${CONTAINER_NAME}:
+  ${DIR}:
     build: .
     dns:
-      - 8.8.8.8
-      - 8.8.4.4
+      - 2001:4860:4860::8888
+      - 2001:4860:4860::8844
     environment:
-      - SQUID_USER=qwerty
+      - SQUID_USER=proxy
       - SQUID_PASS=secret123
       - SQUID_PORT=8090
-    hostname: ${CONTAINER_NAME}
-    container_name: ${CONTAINER_NAME}
+    hostname: ${DIR}
+    container_name: ${DIR}
     restart: always
     logging:
       driver: json-file
@@ -53,12 +52,9 @@ services:
       - ./var/cache:/var/spool/squid
       - ./var/log:/var/log/squid
       - .htpasswd:/etc/squid/.htpasswd:rw
-    ports:
-      - "8080:8080"    # Host 8080 to Container 8080 (SQUID_PORT)
-      - "6000:5000"    # Host 6000 to Container 5000 (Flask API)
     networks:
       ${NETWORK_NAME}:
-        ipv4_address: ${IPV4_ADDR}
+        ipv6_address: ${IPV6_ADDR}
 
 networks:
   ${NETWORK_NAME}:
@@ -74,4 +70,4 @@ EOF
   cd .. || exit 1
 done
 
-echo "✅ All containers from 243 to 252 created and running."
+echo "✅ All containers from ${START} to ${END} created and running with IPv6 addresses."

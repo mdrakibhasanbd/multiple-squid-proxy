@@ -29,10 +29,10 @@ RUN grep -v '^\s*#' /etc/squid/squid.conf.origin | grep -v '^\s*$' > /etc/squid/
 
 WORKDIR /app
 
-COPY squid_api.py /app/squid_api.py
-COPY templates/index.html /app/templates/index.html
+COPY container/squid_api.py /app/squid_api.py
+COPY container/templates/index.html /app/templates/index.html
 
-ADD entrypoint.sh /sbin/entrypoint.sh
+ADD container/entrypoint.sh /sbin/entrypoint.sh
 RUN chmod +x /sbin/entrypoint.sh
 
 EXPOSE 5000
